@@ -4,6 +4,7 @@
 *.org
 *.pyc
 *.h5
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -134,3 +135,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+ML0101EN-Proj-Loan-py-v1-try.ipynb
+ML0101EN-Proj-Loan-py-v1_ORIG.ipynb
