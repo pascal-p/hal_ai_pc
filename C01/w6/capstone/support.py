@@ -7,8 +7,9 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.base import clone
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix, classification_report
-from sklearn.metrics import jaccard_similarity_score, f1_score, log_loss
-# from sklearn.metrics import jaccard_score
+from sklearn.metrics import f1_score, log_loss
+# from sklearn.metrics import jaccard_similarity_score
+from sklearn.metrics import jaccard_score
 
 
 def plot_for_best_k(mean_acc, std_acc, ks=10):
@@ -83,8 +84,8 @@ def find_best_k_cv(X_train, y_train, ks=10, cv=5):
 
 def prep_test_set(df, mu, sigma):
     """
-    Apply to test set all transformation done on training set, using mu, sigma
-    as defined on train set
+    Apply to test set all transformations done on training set, using mu, sigma
+    as defined on training set
     """
     # 1 - Date conversion
     # df['due_date'] = pd.to_datetime(df['due_date'])
@@ -110,19 +111,22 @@ def prep_test_set(df, mu, sigma):
 def conv_to_bin(y):
     return np.where(y == 'PAIDOFF', 1, 0)
 
-def scores_fn(y_test, y_hat, with_log_loss=False):
+def scores_fn(y_test, y_hat):
     y_test_bin, y_hat_bin = conv_to_bin(y_test), conv_to_bin(y_hat)
-    # j_sc = jaccard_score(y_test_bin, y_hat_bin)
-    j_s_sc = jaccard_similarity_score(y_test_bin, y_hat_bin)
+    j_s_sc = jaccard_score(y_test_bin, y_hat_bin)
+    # j_s_sc = jaccard_similarity_score(y_test_bin, y_hat_bin) # deprecated warning
     f1_sc = f1_score(y_test_bin, y_hat_bin)
-    ll_sc = log_loss(y_test_bin, y_hat_bin) if with_log_loss else 'NA'
     #
-    # print("\tClassisifcation report:\n", classification_report(y_test_bin, y_hat_bin))
-    return (j_s_sc, f1_sc, ll_sc) # return (j_sc, j_s_sc, f1_sc, ll_sc)
+    return (j_s_sc, f1_sc) # return (j_sc, j_s_sc, f1_sc)
+
+def scores_fn_ll(y_test, y_hat, y_hat_prob):
+    j_s_sc, f1_sc = scores_fn(y_test, y_hat)
+    ll_sc = log_loss(y_test, y_hat_prob)
+    return (j_s_sc, f1_sc, ll_sc)
 
 def print_scores(j_s_sc, f1_sc, ll_sc):
-    print("\tjaccard_similarity_score: {0:1.5f}".format(j_s_sc))
-    # print("\tjaccard_score: {0:1.5f}".format(j_sc))
+    # print("\tjaccard_similarity_score: {0:1.5f}".format(j_s_sc))
+    print("\tjaccard_score: {0:1.5f}".format(j_sc))
     print("\tf1_score: {0:1.5f}".format(f1_sc))
     if ll_sc == 'NA':
         print("\tlogloss_score: NA")
