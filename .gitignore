@@ -153,3 +153,8 @@ exp/
 img/
 FasionCNN_blank_ORIG.ipynb
 data
+MNIST_data
+movies-data
+*.png
+*.jpeg
+*.jpg
