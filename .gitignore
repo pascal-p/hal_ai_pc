@@ -158,3 +158,9 @@ movies-data
 *.png
 *.jpeg
 *.jpg
+
+*ORIG*
+Positive_tensors
+Negative_tensors
+resources
+concrete_data_week2
